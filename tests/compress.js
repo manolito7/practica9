@@ -1,8 +1,8 @@
 const fs = require('fs-extra');
 const path = require('path');
 const archiver = require('archiver');
+
 const orig = path.resolve(path.join(__dirname, "CORE19-09_quiz_random.zip"));
-console.log(__dirname);
 const dest = path.resolve(path.join(__dirname ,"../CORE19-09_quiz_random.zip"));
 const output = fs.createWriteStream(orig);
 const archive = archiver('zip', {
