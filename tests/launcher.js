@@ -3,14 +3,7 @@
  */
 
 const Mocha = require("mocha");
-
-// Gets the assignment path from args[2]
-if (!(args.length > 2)) {
-    console.error("Assignment path not found");
-    process.exit(1);
-}
-
-const assignment_path = path.resolve(args[2]);
+const assignment_path = "./tests/checks.test.js";
 
 let score = 0;
 let score_total = 0;
