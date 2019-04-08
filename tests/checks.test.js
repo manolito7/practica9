@@ -284,7 +284,7 @@ describe("CORE19-09_quiz_random", function () {
             server.kill();
             await timeout(T_WAIT * 1000);
         }
-        fs.copySync(quizzes_back, quizzes_orig, {"overwrite": true});
+        try {fs.copySync(quizzes_back, quizzes_orig, {"overwrite": true});} catch (e){}
     });
 
 });
