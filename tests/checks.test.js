@@ -8,6 +8,7 @@ const path = require('path');
 const fs = require('fs-extra');
 const Utils = require('./utils');
 const to = require('./to');
+const child_process = require("child_process");
 const spawn = require("child_process").spawn;
 const Browser = require('zombie');
 
@@ -18,11 +19,12 @@ let error_critical = null;
 const T_WAIT = 2; // Time between commands
 const T_TEST = 2 * 60; // Time between tests (seconds)
 const path_assignment = path.resolve(path.join(__dirname, "../quiz_express"));
+const path_json = path.join(path_assignment, 'package.json');
 const quizzes_orig = path.join(path_assignment, 'quizzes.sqlite');
 const quizzes_back = path.join(path_assignment, 'quizzes.original.sqlite');
-const quizzes_test = path.join(path_assignment, 'tests', 'quizzes.sqlite');
+const quizzes_test = path.join(__dirname, 'quizzes.sqlite');
 const browser = new Browser();
-let url = "http://localhost:3000/quizzes";
+let url = "http://localhost:5000/quizzes";
 
 // HELPERS
 const timeout = ms => new Promise(res => setTimeout(res, ms));
@@ -86,6 +88,7 @@ describe("CORE19-09_quiz_random", function () {
         }});
 
     it('', async function () {
+        const expected = "npm install";
         this.name = `4(Precheck): Installing dependencies...`;
         this.score = 0;
         if (error_critical) {
@@ -95,13 +98,17 @@ describe("CORE19-09_quiz_random", function () {
             this.msg_ok = "Dependencies installed successfully";
             this.msg_err = "Error installing dependencies";
             //install dependencies
-            [error_deps, _] = await to(child_process.exec("npm install", {cwd: path_assignment}));
+            [error_deps, output] = await to(new Promise((resolve, reject) => {
+                child_process.exec(expected, {cwd: path_assignment}, (err, stdout) =>
+                    err ? reject(err) : resolve(stdout))
+            }));
             if (error_deps) {
                 this.msg_err = "Error installing dependencies: " + error_deps;
                 error_critical = this.msg_err;
             }
             should.not.exist(error_critical);
-        }});
+        }
+    });
 
     it('', async function () {
         this.name = `5(Precheck): Replacing answers file...`;
@@ -113,19 +120,14 @@ describe("CORE19-09_quiz_random", function () {
             this.msg_ok = "'quizzes.sqlite' replaced successfully";
             this.msg_err = "Error replacing 'quizzes.sqlite'";
             let error_deps;
-            try {
-                fs.copySync(quizzes_orig, quizzes_back, {"overwrite": true});
-                fs.copySync(quizzes_test, quizzes_orig, {"overwrite": true});
-            } catch (e) {
-                error_deps = e;
-            }
+            try {fs.copySync(quizzes_orig, quizzes_back, {"overwrite": true});} catch (e){}
+            [error_deps, _] = await to(fs.copy(quizzes_test, quizzes_orig, {"overwrite": true}));
             if (error_deps) {
                 this.msg_err = "Error copying the answers file: " + error_deps;
-                error_critical = this.msg_err;
             }
-            should.not.exist(error_critical);
-
-        }});
+            should.not.exist(error_deps);
+        }
+    });
 
     it('', async function () {
         this.name = `6: Launching the server...`;
