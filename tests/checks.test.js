@@ -18,7 +18,7 @@ let error_critical = null;
 // CONSTANTS
 const T_WAIT = 2; // Time between commands
 const T_TEST = 2 * 60; // Time between tests (seconds)
-const path_assignment = path.resolve(path.join(__dirname, "../quiz_express"));
+const path_assignment = path.resolve(path.join(__dirname, "../quiz_2019"));
 const path_json = path.join(path_assignment, 'package.json');
 const quizzes_orig = path.join(path_assignment, 'quizzes.sqlite');
 const quizzes_back = path.join(path_assignment, 'quizzes.original.sqlite');
