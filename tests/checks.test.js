@@ -24,7 +24,7 @@ const quizzes_orig = path.join(path_assignment, 'quizzes.sqlite');
 const quizzes_back = path.join(path_assignment, 'quizzes.original.sqlite');
 const quizzes_test = path.join(__dirname, 'quizzes.sqlite');
 const browser = new Browser();
-let url = "http://localhost:5000/quizzes";
+let url = "http://localhost:5000";
 
 // HELPERS
 const timeout = ms => new Promise(res => setTimeout(res, ms));
@@ -177,8 +177,28 @@ describe("CORE19-09_quiz_random", function () {
     });
 
     it('', async function () {
-        const expected = url+'/randomplay';
+        const expected = url + '/quizzes';
         this.name = `8: Checking that the server responds at ${expected}...`;
+        this.score = 1;
+        if (error_critical) {
+            this.msg_err = error_critical;
+            should.not.exist(error_critical);
+        } else {
+            this.msg_ok = `Server responded at ${expected}`;
+            let error_nav;
+            [error_nav, resp] = await to(browser.visit(expected));
+            if (error_nav) {
+                this.msg_err = `Server not responding at ${expected}\nError:${error_nav}\nReceived:${browser.text('body')}`;
+                error_critical = this.msg_err;
+                should.not.exist(error_critical);
+            }
+            should.not.exist(error_nav);
+        }
+    });
+
+    it('', async function () {
+        const expected = url+'/randomplay';
+        this.name = `9: Checking that the server responds at ${expected}...`;
         this.score = 1;
         if (error_critical) {
             this.msg_err = error_critical;
@@ -195,7 +215,7 @@ describe("CORE19-09_quiz_random", function () {
     it('', async function () {
         const expected = '0';
         let url = url+'/randomplay';
-        this.name = `9: Checking the initial score '${expected}' at ${url}...`;
+        this.name = `10: Checking the initial score '${expected}' at ${url}...`;
         this.score = 1;
         if (error_critical) {
             this.msg_err = error_critical;
@@ -213,7 +233,7 @@ describe("CORE19-09_quiz_random", function () {
 
     it('', async function () {
         let url = url+'/randomcheck/1?answer=NOK';
-        this.name = `10: Checking that the server accepts wrong answers at ${url}...`;
+        this.name = `11: Checking that the server accepts wrong answers at ${url}...`;
         this.score = 1;
         if (error_critical) {
             this.msg_err = error_critical;
@@ -231,8 +251,8 @@ describe("CORE19-09_quiz_random", function () {
     it('', async function () {
         const expected = '0';
         let url = url+'/randomcheck/1?answer=NOK';
-        this.name = `11: Checking the score at ${url}...`;
-        this.score = 2;
+        this.name = `12: Checking the score at ${url}...`;
+        this.score = 1;
         if (error_critical) {
             this.msg_err = error_critical;
             should.not.exist(error_critical);
@@ -248,7 +268,7 @@ describe("CORE19-09_quiz_random", function () {
 
     it('', async function () {
         let url = url+'/randomcheck/1?answer=OK';
-        this.name = `12: Checking that the server accepts right answers at ${url}...`;
+        this.name = `13: Checking that the server accepts right answers at ${url}...`;
         this.score = 1;
         if (error_critical) {
             this.msg_err = error_critical;
@@ -266,7 +286,7 @@ describe("CORE19-09_quiz_random", function () {
     it('', async function () {
         const expected = '1';
         let url = url+'/randomcheck/1?answer=OK';
-        this.name = `13: Checking the score at ${url}...`;
+        this.name = `14: Checking the score at ${url}...`;
         this.score = 2;
         if (error_critical) {
             this.msg_err = error_critical;
