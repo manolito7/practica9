@@ -197,7 +197,7 @@ describe("CORE19-09_quiz_random", function () {
     });
 
     it('', async function () {
-        const expected = url+'/randomplay';
+        const expected = url+'/quizzes/randomplay';
         this.name = `9: Checking that the server responds at ${expected}...`;
         this.score = 1;
         if (error_critical) {
@@ -214,7 +214,7 @@ describe("CORE19-09_quiz_random", function () {
 
     it('', async function () {
         const expected = '0';
-        let url = url+'/randomplay';
+        let url = url+'/quizzes/randomplay';
         this.name = `10: Checking the initial score '${expected}' at ${url}...`;
         this.score = 1;
         if (error_critical) {
@@ -232,7 +232,7 @@ describe("CORE19-09_quiz_random", function () {
     });
 
     it('', async function () {
-        let url = url+'/randomcheck/1?answer=NOK';
+        let url = url+'/quizzes/randomcheck/1?answer=NOK';
         this.name = `11: Checking that the server accepts wrong answers at ${url}...`;
         this.score = 1;
         if (error_critical) {
@@ -250,7 +250,7 @@ describe("CORE19-09_quiz_random", function () {
 
     it('', async function () {
         const expected = '0';
-        let url = url+'/randomcheck/1?answer=NOK';
+        let url = url+'/quizzes/randomcheck/1?answer=NOK';
         this.name = `12: Checking the score at ${url}...`;
         this.score = 1;
         if (error_critical) {
@@ -267,7 +267,7 @@ describe("CORE19-09_quiz_random", function () {
     });
 
     it('', async function () {
-        let url = url+'/randomcheck/1?answer=OK';
+        let url = url+'/quizzes/randomcheck/1?answer=OK';
         this.name = `13: Checking that the server accepts right answers at ${url}...`;
         this.score = 1;
         if (error_critical) {
@@ -285,7 +285,7 @@ describe("CORE19-09_quiz_random", function () {
 
     it('', async function () {
         const expected = '1';
-        let url = url+'/randomcheck/1?answer=OK';
+        let url = url+'/quizzes/randomcheck/1?answer=OK';
         this.name = `14: Checking the score at ${url}...`;
         this.score = 2;
         if (error_critical) {
