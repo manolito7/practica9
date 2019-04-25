@@ -28,8 +28,6 @@ const url = "http://localhost:5000";
 
 // HELPERS
 const timeout = ms => new Promise(res => setTimeout(res, ms));
-let server = null;
-
 
 //TESTS
 describe("CORE19-09_quiz_random", function () {
@@ -45,7 +43,7 @@ describe("CORE19-09_quiz_random", function () {
         if (error_path) {
             error_critical = this.msg_err;
         }
-        path_ok.should.be.equal(true);
+        should.not.exist(error_critical);
     });
 
     it('', async function () {
@@ -53,7 +51,6 @@ describe("CORE19-09_quiz_random", function () {
         this.score = 0;
         if (error_critical) {
             this.msg_err = error_critical;
-            should.not.exist(error_critical);
         } else {
             this.msg_ok = "Dependencies installed successfully";
             this.msg_err = "Error installing dependencies";
@@ -63,8 +60,8 @@ describe("CORE19-09_quiz_random", function () {
                 this.msg_err = `The file '${path_json}' has not been found`;
                 error_critical = this.msg_err;
             }
-            json_ok.should.be.equal(true);
         }
+        should.not.exist(error_critical);
     });
 
     it('', async function () {
@@ -72,7 +69,6 @@ describe("CORE19-09_quiz_random", function () {
         this.score = 0;
         if (error_critical) {
             this.msg_err = error_critical;
-            should.not.exist(error_critical);
         } else {
             this.msg_ok = "The 'package.json' file has the right format";
             this.msg_err = "Error parsing the 'package.json' file";
@@ -86,8 +82,8 @@ describe("CORE19-09_quiz_random", function () {
             if (!is_json) {
                 error_critical = this.msg_err;
             }
-            is_json.should.be.equal(true);
         }
+        should.not.exist(error_critical);
     });
 
     it('', async function () {
@@ -96,7 +92,6 @@ describe("CORE19-09_quiz_random", function () {
         this.score = 0;
         if (error_critical) {
             this.msg_err = error_critical;
-            should.not.exist(error_critical);
         } else {
             this.msg_ok = "Dependencies installed successfully";
             this.msg_err = "Error installing dependencies";
@@ -109,8 +104,8 @@ describe("CORE19-09_quiz_random", function () {
                 this.msg_err = "Error installing dependencies: " + error_deps;
                 error_critical = this.msg_err;
             }
-            should.not.exist(error_critical);
         }
+        should.not.exist(error_critical);
     });
 
     it('', async function () {
@@ -118,7 +113,6 @@ describe("CORE19-09_quiz_random", function () {
         this.score = 0;
         if (error_critical) {
             this.msg_err = error_critical;
-            should.not.exist(error_critical);
         } else {
             this.msg_ok = "'quizzes.sqlite' replaced successfully";
             this.msg_err = "Error replacing 'quizzes.sqlite'";
@@ -131,8 +125,8 @@ describe("CORE19-09_quiz_random", function () {
             if (error_deps) {
                 this.msg_err = "Error copying the answers file: " + error_deps;
             }
-            should.not.exist(error_deps);
         }
+        should.not.exist(error_critical);
     });
 
     it('', async function () {
@@ -141,10 +135,9 @@ describe("CORE19-09_quiz_random", function () {
         this.score = 1;
         if (error_critical) {
             this.msg_err = error_critical;
-            should.not.exist(error_critical);
         } else {
             this.msg_ok = `'${expected}' has been launched correctly`;
-            server = spawn("node", [expected], {cwd: path_assignment});
+            let server = spawn("node", [expected], {cwd: path_assignment});
             let error_launch = "";
             server.on('error', function (data) {
                 error_launch += data
@@ -153,10 +146,9 @@ describe("CORE19-09_quiz_random", function () {
             this.msg_err = `Error launching '${expected}'\n\t\t\tReceived: ${error_launch}`;
             if (error_launch.length) {
                 error_critical = this.msg_err;
-                should.not.exist(error_critical);
             }
-            error_launch.should.be.equal("");
         }
+        should.not.exist(error_critical);
     });
 
     it('', async function () {
@@ -170,8 +162,7 @@ describe("CORE19-09_quiz_random", function () {
             this.msg_ok = `Server responded at ${expected}`;
             [error_nav, resp] = await to(browser.visit(expected));
             this.msg_err = `Server not responding at ${expected}\n\t\tError:${error_nav}\n\t\tReceived:${browser.text('body')}`;
-            error_critical = this.msg_err;
-            should.not.exist(error_critical);
+            should.not.exist(error_nav);
         }
     });
 
@@ -215,9 +206,6 @@ describe("CORE19-09_quiz_random", function () {
             should.not.exist(error_critical);
         } else {
             this.msg_ok = `Found the initial score '${expected}' at ${myurl}`;
-            [error_nav, resp] = await to(browser.visit(myurl));
-            this.msg_err = `Server not responding at ${myurl}\n\t\tError:${error_nav}\n\t\tReceived:${browser.text('body')}`;
-            should.not.exist(error_nav);
             this.msg_err = `The initial score '${expected}' has not been found at ${myurl}\n\t\tReceived:${browser.text('body')}`;
             Utils.search(expected, browser.text('body')).should.be.equal(true);
         }
@@ -231,7 +219,7 @@ describe("CORE19-09_quiz_random", function () {
             this.msg_err = error_critical;
             should.not.exist(error_critical);
         } else {
-            this.msg_ok = `Wrong answer sent successfully to ${expected}\n\t\tReceived:${browser.text('body')}`;
+            this.msg_ok = `Wrong answer sent successfully to ${expected}`;
             [error_nav, resp] = await to(browser.visit(expected));
             this.msg_err = `Server not responding at ${expected}\n\t\tError:${error_nav}\n\t\tReceived:${browser.text('body')}`;
             should.not.exist(error_nav);
@@ -249,9 +237,6 @@ describe("CORE19-09_quiz_random", function () {
             should.not.exist(error_critical);
         } else {
             this.msg_ok = `Found the right score '${expected}' at ${myurl}`;
-            [error_nav, resp] = await to(browser.visit(myurl));
-            this.msg_err = `Server not responding at ${myurl}\n\t\tError:${error_nav}\n\t\tReceived:${browser.text('body')}`;
-            should.not.exist(error_nav);
             this.msg_err = `Score '${expected}' not found at ${myurl}\n\t\tError:${error_nav}\n\t\tReceived:${browser.text('body')}`;
             Utils.search(expected, browser.text('body')).should.be.equal(true);
         }
@@ -283,10 +268,7 @@ describe("CORE19-09_quiz_random", function () {
             should.not.exist(error_critical);
         } else {
             this.msg_ok = `Found the right score '${expected}' at ${myurl}`;
-            [error_nav, resp] = await to(browser.visit(myurl));
-            this.msg_err = `Server not responding at ${myurl}\n\t\tError:${error_nav}\n\t\tReceived:${browser.text('body')}`;
-            should.not.exist(error_nav);
-            this.msg_err = `The right score '${expected}' has not been found at ${myurl}\n\t\tReceived:${browser.text('body')}`;
+            this.msg_err = `Score '${expected}' has not been found at ${myurl}\n\t\tReceived:${browser.text('body')}`;
             Utils.search(expected, browser.text('body')).should.be.equal(true);
         }
     });
