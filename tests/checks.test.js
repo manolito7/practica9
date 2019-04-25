@@ -28,6 +28,7 @@ const url = "http://localhost:5000";
 
 // HELPERS
 const timeout = ms => new Promise(res => setTimeout(res, ms));
+let server;
 
 //TESTS
 describe("CORE19-09_quiz_random", function () {
@@ -129,7 +130,7 @@ describe("CORE19-09_quiz_random", function () {
         }
     });
 
-    it('', async function () {
+    xit('', async function () {
         const expected = "bin/www";
         this.name = `6: Launching the server...`;
         this.score = 1;
@@ -137,7 +138,7 @@ describe("CORE19-09_quiz_random", function () {
             this.msg_err = error_critical;
         } else {
             this.msg_ok = `'${expected}' has been launched correctly`;
-            let server = spawn("node", [expected], {cwd: path_assignment});
+            server = spawn("node", [expected], {cwd: path_assignment});
             let error_launch = "";
             server.on('error', function (data) {
                 error_launch += data
