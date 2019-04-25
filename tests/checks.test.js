@@ -16,7 +16,7 @@ const Browser = require('zombie');
 let error_critical = null;
 
 // CONSTANTS
-const T_WAIT = 2 * 60; // Server boot time
+const T_WAIT = 60; // Server boot time
 const T_TEST = 5 * 60; // Time between tests (seconds)
 const path_assignment = path.resolve(path.join(__dirname, "../quiz_2019"));
 const path_json = path.join(path_assignment, 'package.json');
@@ -130,7 +130,7 @@ describe("CORE19-09_quiz_random", function () {
         }
     });
 
-    xit('', async function () {
+    it('', async function () {
         const expected = "bin/www";
         this.name = `6: Launching the server...`;
         this.score = 1;
@@ -138,6 +138,7 @@ describe("CORE19-09_quiz_random", function () {
             this.msg_err = error_critical;
         } else {
             this.msg_ok = `'${expected}' has been launched correctly`;
+            this.msg_err = `Error launching '${expected}'`;
             server = spawn("node", [expected], {cwd: path_assignment});
             let error_launch = "";
             server.on('error', function (data) {
