@@ -1,7 +1,6 @@
 const Sequelize = require("sequelize");
 const {models} = require("../models");
-const Op = Sequelize.Op;
-var ses;
+
 
 // Autoload el quiz asociado a :quizId
 exports.load = (req, res, next, quizId) => {
@@ -160,7 +159,7 @@ exports.check = (req, res, next) => {
 // GET /quizzes/randomplay
 
 
-exports.randomPlay = (req, res, next) => {
+/*exports.randomPlay = (req, res, next) => {
     ses = req.session;
     const score = ses.score || 0;
 
@@ -185,12 +184,50 @@ exports.randomPlay = (req, res, next) => {
             next(error);
         });
 
-};
+};*/
+
+
+/*exports.randomPlay = (req, res, next) => {
+    req.session = req.session || [];
+
+    const score = req.session.length;
+
+    const whereOpt = {id: {[Sequelize.Op.notIn]: req.session}};
+
+    models.quiz.count({where: whereOpt})
+        .then(count => {
+            return models.quiz.findAll({
+                where: whereOpt,
+                offset: Math.floor(Math.random()*count),
+                limit:1
+            })
+                .then(quizzes =>{
+                    return quizzes[0];
+                })
+        })
+        .then(quiz =>{
+            if(quiz=== undefined){
+                req.session = [];
+                res.render('quizzes/random_none', {
+                    score:score
+                });
+            } else {
+                res.render('quizzes/random_play', {
+                    quiz:quiz,
+                    score: score
+                });
+            }
+        })
+        .catch(error => next(error));
+
+
+};*/
+
 
 
 // GET /quizzes/randomcheck/:quizId
 
-exports.randomCheck = (req, res, next) => {
+/*exports.randomCheck = (req, res, next) => {
     ses = req.session;
     const answer = req.query.answer;
     const quiz = req.quiz;
@@ -209,4 +246,103 @@ exports.randomCheck = (req, res, next) => {
 
     const score = ses.score;
     res.render('quizzes/random_result.ejs', {result,score,answer} );
+};*/
+
+/*exports.randomCheck = (req,res,next) =>{
+    try {
+        const {quiz, query} = req;
+        req.session = req.session || [];
+
+        const actual_answer = query.answer || "";
+        const right_answer = quiz.answer;
+
+        const result = actual_answer.toLowerCase().trim() === right_answer.toLowerCase().trim();
+
+        if (result) {
+            if (req.session.indexOf(req.quiz.id) === -1) {
+                req.session.push(req.quiz.id);
+            }
+        }
+
+        const score = req.session.length;
+
+        if (!result) {
+            req.session = [];
+        }
+
+        res.render('quizzes/random_result', {actual_answer, result, score});
+    } catch (error) {
+        next(error);
+
+    }
 };
+*/
+
+exports.randomplay = (req, res, next) => {
+    //const session = req.session;
+    const {session} = req;
+
+    if(typeof(session.randomPlay) === 'undefined'){
+        session.randomPlay = [];
+    }
+    models.quiz.findAll({
+        where: {
+            id: {
+                [Sequelize.Op.notIn]: session.randomPlay }
+        }//,
+        //limit: 1
+    })
+        .then(quizzes => {
+
+            let a = Math.random();
+            let b = quizzes.length-1;
+            let c= a*b;
+            let random = Math.round(c);
+
+            const quiz = quizzes[random];
+            const score = session.randomPlay.length;
+            if(quiz) {
+                console.log("The id is ${quiz.id}");
+                res.render('quizzes/random_play.ejs', {
+                    quiz,
+                    score
+                });
+            } else {
+                session.randomPlay = [];
+                res.render('quizzes/random_none.ejs', {
+                    score
+                });
+            }
+        })
+        .catch(error => next(error));
+
+};
+
+// GET /quizzes/randomcheck
+exports.randomcheck = (req, res, next) => {
+
+    const {quiz, query, session} = req;
+
+    const answer = query.answer || "";
+    const result = answer.toLowerCase().trim() === quiz.answer.toLowerCase().trim();
+
+    score = session.randomPlay.length;
+
+    if(result){
+        session.randomPlay.push(quiz.id)
+        score++;
+    } else {
+        session.randomPlay = [];
+    }
+
+    res.render('quizzes/random_result.ejs', {
+        quiz,
+        result,
+        score,
+        answer
+    });
+
+};
+
+
+
